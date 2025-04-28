@@ -4,6 +4,7 @@ from typing import Dict
 
 import pygame
 
+
 class SixAxisArmController:
     def __init__(self):
         # 初始化pygame和手柄

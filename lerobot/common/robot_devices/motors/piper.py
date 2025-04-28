@@ -2,7 +2,9 @@ import time
 from typing import Dict
 
 from piper_sdk import C_PiperInterface_V2
+
 from lerobot.common.robot_devices.motors.configs import PiperMotorsBusConfig
+
 
 class PiperMotorsBus:
     """
