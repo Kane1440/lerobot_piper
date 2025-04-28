@@ -604,11 +604,28 @@ class LeKiwiRobotConfig(RobotConfig):
 @dataclass
 class PiperRobotConfig(RobotConfig):
     inference_time: bool
+
+    master_arm: dict[str, MotorsBusConfig] = field(
+        default_factory=lambda: {
+            "main": PiperMotorsBusConfig(
+                can_name="can_master",
+                motors={
+                    "joint_1": [1, "agilex_piper"],
+                    "joint_2": [2, "agilex_piper"],
+                    "joint_3": [3, "agilex_piper"],
+                    "joint_4": [4, "agilex_piper"],
+                    "joint_5": [5, "agilex_piper"],
+                    "joint_6": [6, "agilex_piper"],
+                    "gripper": (7, "agilex_piper"),
+                },
+            )
+        }
+    )
     
     follower_arm: dict[str, MotorsBusConfig] = field(
         default_factory=lambda: {
             "main": PiperMotorsBusConfig(
-                can_name="can0",
+                can_name="can_follower",
                 motors={
                     # name: (index, model)
                     "joint_1": [1, "agilex_piper"],
@@ -625,14 +642,14 @@ class PiperRobotConfig(RobotConfig):
 
     cameras: dict[str, CameraConfig] = field(
         default_factory=lambda: {
-            "one": OpenCVCameraConfig(
-                camera_index=0,
+            "one": IntelRealSenseCameraConfig(
                 fps=30,
                 width=640,
                 height=480,
+                serial_number=243522070193,
             ),
             "two": OpenCVCameraConfig(
-                camera_index=2,
+                camera_index=8,
                 fps=30,
                 width=640,
                 height=480,

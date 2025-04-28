@@ -12,7 +12,7 @@ class PiperMotorsBus:
         self.piper = C_PiperInterface_V2(config.can_name)
         self.piper.ConnectPort()
         self.motors = config.motors
-        self.init_joint_position = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # [6 joints + 1 gripper] * 0.0
+        self.init_joint_position = [0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0] # [6 joints + 1 gripper] * 0.0
         self.safe_disable_position = [0.0, 0.0, 0.0, 0.0, 0.52, 0.0, 0.0]
         self.pose_factor = 1000 # 单位 0.001mm
         self.joint_factor = 57324.840764 # 1000*180/3.14， rad -> 度（单位0.001度）
@@ -93,15 +93,22 @@ class PiperMotorsBus:
         """
         self.write(target_joint=self.init_joint_position)
 
+    def apply_calibration_master(self):
+        """
+            master移动到初始位置
+        """
+        self.write_master(target_joint=self.init_joint_position)
+        
+
     def write(self, target_joint:list):
         """
             Joint control
             - target joint: in radians
                 joint_1 (float): 关节1角度 (-92000~92000) / 57324.840764
-                joint_2 (float): 关节2角度 -1300 ~ 90000 / 57324.840764
-                joint_3 (float): 关节3角度 2400 ~ -80000 / 57324.840764
+                joint_2 (float): 关节2角度 -1300 ~ 90000 / 57324.840764   ####-2400 ~ 120000
+                joint_3 (float): 关节3角度 2400 ~ -80000 / 57324.840764   ####2400 ~ -110000
                 joint_4 (float): 关节4角度 -90000~90000 / 57324.840764
-                joint_5 (float): 关节5角度 19000~-77000 / 57324.840764
+                joint_5 (float): 关节5角度 19000~-77000 / 57324.840764    ####77000~-77000
                 joint_6 (float): 关节6角度 -90000~90000 / 57324.840764
                 gripper_range: 夹爪角度 0~0.08
         """
@@ -112,11 +119,26 @@ class PiperMotorsBus:
         joint_4 = round(target_joint[4]*self.joint_factor)
         joint_5 = round(target_joint[5]*self.joint_factor)
         gripper_range = round(target_joint[6]*1000*1000)
-
+        
         self.piper.MotionCtrl_2(0x01, 0x01, 100, 0x00) # joint control
         self.piper.JointCtrl(joint_0, joint_1, joint_2, joint_3, joint_4, joint_5)
         self.piper.GripperCtrl(abs(gripper_range), 1000, 0x01, 0) # 单位 0.001°
-    
+
+    def write_master(self, target_joint:list):
+        # 启用按键示教后无效
+        joint_0 = round(target_joint[0]*self.joint_factor)
+        joint_1 = round(target_joint[1]*self.joint_factor)
+        joint_2 = round(target_joint[2]*self.joint_factor)
+        joint_3 = round(target_joint[3]*self.joint_factor)
+        joint_4 = round(target_joint[4]*self.joint_factor)
+        joint_5 = round(target_joint[5]*self.joint_factor)
+        gripper_range = round(target_joint[6]*1000*1000)
+        
+        self.piper.MotionCtrl_2(0x01, 0x01, 100, 0x00) # joint control
+        self.piper.JointCtrl(joint_0, joint_1, joint_2, joint_3, joint_4, joint_5)
+        self.piper.GripperCtrl(abs(gripper_range), 1000, 0x01, 0) # 单位 0.001°
+        print("*"*100)
+
 
     def read(self) -> Dict:
         """
@@ -144,3 +166,9 @@ class PiperMotorsBus:
             Move to safe disconnect position
         """
         self.write(target_joint=self.safe_disable_position)
+
+    def safe_disconnect_master(self):
+        """ 
+            Move to safe disconnect position
+        """
+        self.write_master(target_joint=self.safe_disable_position)

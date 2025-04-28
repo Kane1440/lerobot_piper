@@ -22,6 +22,26 @@ from lerobot.common.robot_devices.robots.utils import Robot
 from lerobot.common.robot_devices.utils import busy_wait
 from lerobot.common.utils.utils import get_safe_torch_device, has_method
 
+# 自定义一个平滑器
+prev_action = None
+
+def smooth_action(action, alpha=0.2, max_delta=0.15, spike_threshold=0.8):
+    global prev_action
+    if prev_action is None:
+        prev_action = action
+        return action
+
+    delta = action - prev_action
+
+    # 跳变检测
+    if torch.any(torch.abs(delta) > spike_threshold):
+        return prev_action
+
+    # 限幅 + 平滑
+    delta = torch.clamp(delta, -max_delta, max_delta)
+    smoothed = prev_action + alpha * delta
+    prev_action = smoothed
+    return smoothed
 
 def log_control_info(robot: Robot, dt_s, episode_index=None, frame_index=None, fps=None):
     log_items = []
@@ -103,6 +123,9 @@ def predict_action(observation, policy, device, use_amp):
         # Compute the next action with the policy
         # based on the current observation
         action = policy.select_action(observation)
+
+        # 使用平滑器
+        action = smooth_action(action)
 
         # Remove batch dimension
         action = action.squeeze(0)
