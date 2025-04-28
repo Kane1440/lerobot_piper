@@ -7,10 +7,10 @@ from lerobot.common.robot_devices.robots.configs import (
     LeKiwiRobotConfig,
     ManipulatorRobotConfig,
     MossRobotConfig,
+    PiperRobotConfig,
     RobotConfig,
     So100RobotConfig,
     StretchRobotConfig,
-    PiperRobotConfig
 )
 
 

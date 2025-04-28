@@ -1,6 +1,6 @@
 import time
 from typing import Dict
-from piper_sdk import *
+from piper_sdk import C_PiperInterface_V2
 from lerobot.common.robot_devices.motors.configs import PiperMotorsBusConfig
 
 class PiperMotorsBus:
@@ -42,7 +42,7 @@ class PiperMotorsBus:
         start_time = time.time()
         while not (loop_flag):
             elapsed_time = time.time() - start_time
-            print(f"--------------------")
+            print("--------------------")
             enable_list = []
             enable_list.append(self.piper.GetArmLowSpdInfoMsgs().motor_1.foc_status.driver_enable_status)
             enable_list.append(self.piper.GetArmLowSpdInfoMsgs().motor_2.foc_status.driver_enable_status)
@@ -60,7 +60,7 @@ class PiperMotorsBus:
                 self.piper.DisableArm(7)
                 self.piper.GripperCtrl(0,1000,0x02, 0)
             print(f"使能状态: {enable_flag}")
-            print(f"--------------------")
+            print("--------------------")
             if(enable_flag == enable):
                 loop_flag = True
                 enable_flag = True
@@ -77,9 +77,6 @@ class PiperMotorsBus:
         resp = enable_flag
         print(f"Returning response: {resp}")
         return resp
-    
-    def motor_names(self):
-        return
 
     def set_calibration(self):
         return
@@ -137,7 +134,6 @@ class PiperMotorsBus:
         self.piper.MotionCtrl_2(0x01, 0x01, 100, 0x00) # joint control
         self.piper.JointCtrl(joint_0, joint_1, joint_2, joint_3, joint_4, joint_5)
         self.piper.GripperCtrl(abs(gripper_range), 1000, 0x01, 0) # 单位 0.001°
-        print("*"*100)
 
 
     def read(self) -> Dict:

@@ -1,7 +1,8 @@
-import pygame
 import threading
 import time
 from typing import Dict
+
+import pygame
 
 class SixAxisArmController:
     def __init__(self):
@@ -43,10 +44,10 @@ class SixAxisArmController:
             # 处理事件队列
             try:
                 pygame.event.pump()
-            except Exception as e:
+            except Exception:
                 self.stop()
                 continue
-                
+
             # 获取摇杆和按钮输入
             left_x = -self.joystick.get_axis(0)  # 左摇杆x轴
             if abs(left_x) < 0.5:

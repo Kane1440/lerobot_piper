@@ -1,17 +1,13 @@
-"""
-    Teleoperation Agilex Piper with a PS5 controller    
-"""
-
 import time
-import torch
-import numpy as np
-from dataclasses import dataclass, field, replace
+from dataclasses import replace
 
-from lerobot.common.robot_devices.teleop.gamepad import SixAxisArmController
-from lerobot.common.robot_devices.motors.utils import get_motor_names, make_motors_buses_from_configs
+import torch
+
 from lerobot.common.robot_devices.cameras.utils import make_cameras_from_configs
+from lerobot.common.robot_devices.motors.utils import get_motor_names, make_motors_buses_from_configs
 from lerobot.common.robot_devices.utils import RobotDeviceAlreadyConnectedError, RobotDeviceNotConnectedError
 from lerobot.common.robot_devices.robots.configs import PiperRobotConfig
+
 
 class PiperRobot:
     def __init__(self, config: PiperRobotConfig | None = None, **kwargs):
@@ -96,13 +92,13 @@ class PiperRobot:
         self.follower_arm.connect(enable=True)
         if self.master_arm is not None:
             self.master_arm.connect(enable=True)  
-        print("piper conneted")
+        print("piper connected")
 
         # connect cameras
         for name in self.cameras:
             self.cameras[name].connect()
             self.is_connected = self.is_connected and self.cameras[name].is_connected
-            print(f"camera {name} conneted")
+            print(f"camera {name} connected")
         
         print("All connected")
         self.is_connected = True
@@ -243,7 +239,7 @@ class PiperRobot:
             self.logs[f"read_camera_{name}_dt_s"] = self.cameras[name].logs["delta_timestamp_s"]
             self.logs[f"async_read_camera_{name}_dt_s"] = time.perf_counter() - before_camread_t
 
-        # Populate output dictionnaries and format to pytorch
+        # Populate output dictionaries and format to pytorch
         obs_dict = {}
         obs_dict["observation.state"] = state
         for name in self.cameras:
