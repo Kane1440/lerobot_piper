@@ -5,16 +5,11 @@ from typing import Sequence
 import draccus
 
 from lerobot.common.robot_devices.cameras.configs import (
-    CameraConfig,
-    IntelRealSenseCameraConfig,
-    OpenCVCameraConfig,
-)
+    CameraConfig, IntelRealSenseCameraConfig, OpenCVCameraConfig)
 from lerobot.common.robot_devices.motors.configs import (
-    DynamixelMotorsBusConfig,
-    FeetechMotorsBusConfig,
-    MotorsBusConfig,
-    PiperMotorsBusConfig,
-)
+    DynamixelMotorsBusConfig, FeetechMotorsBusConfig, MotorsBusConfig,
+    PiperMotorsBusConfig)
+
 
 @dataclass
 class RobotConfig(draccus.ChoiceRegistry, abc.ABC):
