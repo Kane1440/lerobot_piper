@@ -13,9 +13,8 @@ from lerobot.common.robot_devices.motors.configs import (
     DynamixelMotorsBusConfig,
     FeetechMotorsBusConfig,
     MotorsBusConfig,
-    PiperMotorsBusConfig
+    PiperMotorsBusConfig,
 )
-
 
 @dataclass
 class RobotConfig(draccus.ChoiceRegistry, abc.ABC):

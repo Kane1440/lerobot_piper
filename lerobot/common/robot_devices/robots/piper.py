@@ -5,9 +5,8 @@ import torch
 
 from lerobot.common.robot_devices.cameras.utils import make_cameras_from_configs
 from lerobot.common.robot_devices.motors.utils import get_motor_names, make_motors_buses_from_configs
-from lerobot.common.robot_devices.utils import RobotDeviceAlreadyConnectedError, RobotDeviceNotConnectedError
 from lerobot.common.robot_devices.robots.configs import PiperRobotConfig
-
+from lerobot.common.robot_devices.utils import RobotDeviceAlreadyConnectedError, RobotDeviceNotConnectedError
 
 class PiperRobot:
     def __init__(self, config: PiperRobotConfig | None = None, **kwargs):

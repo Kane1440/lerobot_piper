@@ -1,5 +1,6 @@
 import time
 from typing import Dict
+
 from piper_sdk import C_PiperInterface_V2
 from lerobot.common.robot_devices.motors.configs import PiperMotorsBusConfig
 
@@ -69,7 +70,7 @@ class PiperMotorsBus:
                 enable_flag = False
             # 检查是否超过超时时间
             if elapsed_time > timeout:
-                print(f"超时....")
+                print("超时....")
                 enable_flag = False
                 loop_flag = True
                 break
